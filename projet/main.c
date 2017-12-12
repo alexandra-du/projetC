@@ -25,6 +25,10 @@ int main(){
 
     jour=1; // on commence le 1er novembre
     while(jour<=30){ //tant qu'on est avant le 30/11
+        //on exclut les weekends de novembre qui sont les 4/11 et 5/11 etc
+        while (jour%7==4 ||jour%7==5){
+            jour++;
+        } 
         fprintf(output,"Résultats du jour %d :\n",jour);
             
         printf("Nous sommes le jour %d. Vous avez le choix parmi Alphabet, Amazon, Facebook, Apple et Microsoft. Spécifiez une entreprise. Saisissez Fini pour terminer. \n",jour);
@@ -61,6 +65,7 @@ int main(){
             
             //cash=cash + ou - blabla
             //mettre à jour la composition du portefeuille
+            fprintf(output,"Pour %s : %d actions achetées, %d action(s) vendue(s) \n",ent[i],achat,vente);
             fprintf(output,"blabla les valeurs du jour i et de l'entreprise x à stocker \n");
             i=i+1;
         }
