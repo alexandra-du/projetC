@@ -24,7 +24,7 @@ int main(){
     
 
     jour=1; // on commence le 1er novembre
-    while(jour<2){ //tant qu'on est avant le 30/11
+    while(jour<=30){ //tant qu'on est avant le 30/11
         printf("Nous sommes le jour %d. Vous avez le choix parmi Alphabet, Amazon, Facebook, Apple et Microsoft. Spécifiez une entreprise. Saisissez Fini pour terminer. \n",jour);
         scanf("%s",entreprise);
         strcpy(ent[0],entreprise); //la liste ent stocke la première entreprise choisie par le joueur
@@ -65,7 +65,7 @@ int main(){
         fprintf(output,"Résultats du jour %d :\n",jour);
         fprintf(output,"blabla les valeurs à stocker \n");
 
-        jour++;
+        jour++; //on passe au jour suivant
     }
 
     //fprintf(output,"blabla Résultats finaux, ROI\n");
