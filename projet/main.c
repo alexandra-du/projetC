@@ -11,7 +11,7 @@ int main(){
 
     char filename[20];
     FILE *output;
-    printf("Please enter a file name \n");
+    printf("Veuillez choisir un nom de fichier. \n");
     scanf("%s",filename);
     output=fopen(filename,"w");
     
