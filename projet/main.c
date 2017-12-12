@@ -3,7 +3,7 @@
 
 int main(){
     char nom[30],ch;
-    char entreprise[10],reponse[3]; 
+    char entreprise[10]; 
     int cash,vente,achat;
     int jour, i; //jour = numéro du jour de novembre
     char ent[5][10]; //ent sera la liste d'entreprises qui intéressent le joueur. Elle peut contenir au maximum 5 entreprises (Amazon, Google, etc) de 10 caractères
