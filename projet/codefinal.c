@@ -10,8 +10,8 @@ int main(){
     int actionApple,actionAmazon,actionAlphabet,actionFacebook,actionMicrosoft;
     actionApple=actionAmazon=actionAlphabet=actionFacebook=actionMicrosoft=0;
     int jour, i; //jour = numéro du jour de novembre
-    char ent[5][10]; //ent sera la liste d'entreprises qui intéressent le joueur. Elle peut contenir au maximum 5 entreprises (Amazon, Google, etc) de 10 caractères
-    float coursStock=0,valeurPortefeuille=0;
+    char ent[5][10]; //ent sera la liste d'entreprises qui intéressent le joueur. Elle change chaque jour. Elle peut contenir au maximum 5 entreprises (Amazon, Google, etc) de 10 caractères
+    float valeurPortefeuille=0;
     float cashinitial;
     float cash,ROI;
     float coursStockAlphabet,coursStockAmazon,coursStockApple,coursStockMicrosoft,coursStockFacebook;
@@ -165,9 +165,10 @@ int main(){
     fclose(tokenFile5);
 
 
+//Remarque : lignes 171 à 328 : extraction des cours journaliers pour chaque entreprise sous forme de chaînes de caractères, qui seront convertis en float à l'aide de atof().
+//L'extraction ne donne pas de résultats satisfaisants, mais le reste du code marche bien en choississant des valeurs arbitraires pour coursStockGoogle, coursStockApple etc aux lignes 381-385.
 
-
-    char tabCoursGoogle[60][50]; //on crée un tableau contenant les dates et les cours journaliers à la clôture correspondants pour Google
+    char tabCoursGoogle[60][50]; //on crée un tableau contenant les dates et les cours journaliers à la clôture correspondants pour Google. Les tableaux seront sous la forme {01/11/2017;cours1;02/11/2017;cours2;03/11/2017;cours3;...}
 
     FILE *input1;
     
@@ -183,7 +184,7 @@ int main(){
     while(fgets(ligne1,500,input1)!=NULL){
       /* get the first token */
         
-        token11 = strtok(ligne1, s); // ici strtok brise une chaîne de caractères séparés par une virgule
+        token11 = strtok(ligne1, s); // ici strtok brise une chaîne de caractères séparés par des virgules
         
         while( token11 != NULL ) { //tant qu'on ne parvient pas à la fin de la ligne
             
@@ -346,7 +347,7 @@ char tabCoursApple[60][50]; //on crée un tableau contenant les dates et les cou
 
     jour=1; // on commence le 1er novembre
     while(jour<=30){ //tant qu'on est avant le 30/11
-        //on exclut les weekends de novembre qui sont les 4/11 et 5/11 etc
+        //on exclut les weekends de novembre qui sont les 4/11, 5/11; 11/11,12/11 etc :
         while (jour%7==4 ||jour%7==5){
             jour++;
         }
@@ -369,7 +370,7 @@ char tabCoursApple[60][50]; //on crée un tableau contenant les dates et les cou
             i=i+1;
             //on remplit la liste ent avec les choix de l'utilisateur
         }
-        //printf("%d",i);
+        
 
         //on remplit le reste de la liste par des "vides" :
         while ((i-1)<5){
@@ -377,12 +378,13 @@ char tabCoursApple[60][50]; //on crée un tableau contenant les dates et les cou
             i++;
         }
         printf("Jour %d. Vous avez choisi %s %s %s %s %s \n",jour,ent[0],ent[1],ent[2],ent[3],ent[4]);
-        coursStockAlphabet=atof(tabCoursGoogle[jour*2-1]); //le cours du jour k est stocké dans la (k*2-1)e case du tableau tabCoursGoogle
+        coursStockAlphabet=atof(tabCoursGoogle[jour*2-1]); //le cours Google du jour k est stocké dans la (k*2-1)e case du tableau tabCoursGoogle 
         coursStockAmazon=atof(tabCoursAmazon[jour*2-1]);
         coursStockFacebook=atof(tabCoursFacebook[jour*2-1]);
         coursStockApple=atof(tabCoursApple[jour*2-1]);
         coursStockMicrosoft=atof(tabCoursMicrosoft[jour*2-1]);
         printf("Le cours de Google est %f, celui d'Amazon est %f, celui de Facebook est %f, celui d'Apple est %f et celui de Microsoft est %f.\n",coursStockAlphabet,coursStockAmazon,coursStockFacebook,coursStockApple,coursStockMicrosoft);
+        fprintf(output,"Le cours de Google est %f, celui d'Amazon est %f, celui de Facebook est %f, celui d'Apple est %f et celui de Microsoft est %f.\n",coursStockAlphabet,coursStockAmazon,coursStockFacebook,coursStockApple,coursStockMicrosoft);
         
         //Pour chaque entreprise, on demande au joueur s'il souhaite vendre/acheter des actions
         i=0; //on initialise à la première entreprise
@@ -399,6 +401,7 @@ char tabCoursApple[60][50]; //on crée un tableau contenant les dates et les cou
             fprintf(output,"Pour %s : %d actions achetées, %d action(s) vendue(s) \n",ent[i],achat,vente);
 
 
+            //selon l'entreprise que représente ent[i], on met à jour le portefeuille et le cash en appliquant le cours du stock correspondant
             if (strcmp(ent[i],"Amazon")==0){
                 actionAmazon+=achat-vente;
                 cash=cash+coursStockAmazon*(vente-achat);
@@ -421,14 +424,14 @@ char tabCoursApple[60][50]; //on crée un tableau contenant les dates et les cou
             i++;
         }
         
-        //à la toute fin de chaque boucle (ie pour chaque entreprise, on stocke les valeurs utiles dans le fichier
+        //à la fin de chaque jour, on affiche les résultats du jour:
         fprintf(output,"Votre cash restant est %f. \nLa valeur de votre portefeuille est %f.\n",cash,valeurPortefeuille);
         fprintf(output,"Votre composition de portefeuille est : Alphabet %d, Amazon %d, Facebook %d, Apple %d, Microsoft %d.\n",actionAlphabet,actionAmazon,actionFacebook,actionApple,actionMicrosoft);
         
         jour++; //on passe au jour suivant
     }
 
-    
+    //à la fin du jeu, on donne le score:
     ROI=(valeurPortefeuille+cash-cashinitial)/cashinitial;
     fprintf(output,"\nVotre valeur du portefeuille est %f, votre cash est de %f, donnant un ROI de %f.\n",valeurPortefeuille,cash,ROI);
     fclose(output);
